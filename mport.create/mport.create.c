@@ -49,8 +49,8 @@ int main(int argc, char *argv[])
 {
   int ch;
   int plist_seen = 0;
-  mportPackageMeta *pack = mport_new_packagemeta();
-  mportPlist *plist      = mport_new_plist();
+  mportPackageMeta *pack = mport_packagemeta_new();
+  mportPlist *plist      = mport_plist_new();
   FILE *fp;
     
   while ((ch = getopt(argc, argv, "o:n:v:c:l:s:d:p:P:D:M:O:C:i:j:m:r:")) != -1) {
@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
         if ((fp = fopen(optarg, "r")) == NULL) {
           err(1, "%s", optarg);
         }
-        if (mport_parse_plist_file(fp, plist) != 0) {
+        if (mport_plist_parsefile(fp, plist) != 0) {
           warnx("Could not parse plist file '%s'.\n", optarg);
           exit(1);
         }
