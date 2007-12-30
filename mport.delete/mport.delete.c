@@ -62,9 +62,9 @@ int main(int argc, char *argv[])
   argc -= optind;
   argv += optind;
 
-  mport = mport_new_instance();
+  mport = mport_instance_new();
   
-  if (mport_init_instance(mport, NULL) != MPORT_OK) {
+  if (mport_instance_init(mport, NULL) != MPORT_OK) {
     warnx("%s", mport_err_string());
     exit(1);
   }
@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
     }
   }
 
-  mport_free_instance(mport); 
+  mport_instance_free(mport); 
   
   return 0;
 }
