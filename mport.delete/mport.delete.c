@@ -44,13 +44,24 @@ static void usage(void);
 
 int main(int argc, char *argv[]) 
 {
-  int ch, i, force;
+  int ch, force;
   mportInstance *mport;
+  mportPackageMeta **packs;
+  const char *arg, *where = NULL;
+  force = 0;
     
-  while ((ch = getopt(argc, argv, "f")) != -1) {
+  while ((ch = getopt(argc, argv, "fo:n:")) != -1) {
     switch (ch) {
       case 'f':
         force = 1;
+        break;
+      case 'o':
+        where = "origin=%Q";
+        arg   = optarg;
+        break;
+      case 'n':
+        where = "pkg=%Q";
+        arg   = optarg;
         break;
       case '?':
       default:
@@ -62,18 +73,27 @@ int main(int argc, char *argv[])
   argc -= optind;
   argv += optind;
 
+  if (arg == NULL)
+    usage();
+
   mport = mport_instance_new();
   
   if (mport_instance_init(mport, NULL) != MPORT_OK) {
     warnx("%s", mport_err_string());
     exit(1);
   }
+
+  if (mport_get_meta_from_master(mport, &packs, where, arg) != MPORT_OK) {
+    warnx("%s", mport_err_string());
+    exit(1);
+  }
   
-  for (i=0; i<argc; i++) {
-    if (mport_delete_name_primative(mport, argv[i], force) != MPORT_OK) {
+  while (*packs != NULL) {
+    if (mport_delete_primative(mport, *packs, force) != MPORT_OK) {
       warnx("%s", mport_err_string());
       exit(1);
     }
+    packs++;
   }
 
   mport_instance_free(mport); 
@@ -82,10 +102,9 @@ int main(int argc, char *argv[])
 }
 
 
-    
-
 static void usage() 
 {
-  fprintf(stderr, "Usage: mport.install [-p prefix] pkgfile1 pkgfile2 ...\n");
+  fprintf(stderr, "Usage: mport.delete [-f] -n pkgname\n");
+  fprintf(stderr, "Usage: mport.delete [-f] -o origin\n");
   exit(2);
 }
