@@ -49,6 +49,9 @@ int main(int argc, char *argv[])
   mportPackageMeta **packs;
   const char *arg, *where = NULL;
   force = 0;
+
+  if (argc == 1)
+    usage();
     
   while ((ch = getopt(argc, argv, "fo:n:")) != -1) {
     switch (ch) {
