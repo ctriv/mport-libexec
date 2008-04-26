@@ -23,13 +23,13 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $MidnightBSD: src/libexec/mport.create/mport.create.c,v 1.3 2007/09/27 23:09:12 ctriv Exp $
+ * $MidnightBSD: src/libexec/mport.create/mport.create.c,v 1.4 2008/01/05 22:19:30 ctriv Exp $
  */
 
 
 
 #include <sys/cdefs.h>
-__MBSDID("$MidnightBSD: src/libexec/mport.create/mport.create.c,v 1.3 2007/09/27 23:09:12 ctriv Exp $");
+__MBSDID("$MidnightBSD: src/libexec/mport.create/mport.create.c,v 1.4 2008/01/05 22:19:30 ctriv Exp $");
 
 
 #include <stdlib.h>
@@ -170,6 +170,7 @@ static void usage()
   fprintf(stderr, "\t-d <pkg-descr file>\n");
   fprintf(stderr, "\t-i <pkg-install script>\n");
   fprintf(stderr, "\t-j <pkg-deinstall script>\n");
-  
+  fprintf(stderr, "\t-m <pkg-message file>\n");
+  fprintf(stderr, "\t-M <mtree file>\n");  
   exit(1);
 }
