@@ -40,8 +40,6 @@ __MBSDID("$MidnightBSD: src/libexec/mport.create/mport.create.c,v 1.4 2008/01/05
 #include <mport.h>
 
 
-#define STRING_EQ(s1, s2) (strcmp((s1), (s2)) == 0)
-
 static void usage(void);
 static void check_for_required_args(mportPackageMeta *);
 
@@ -154,8 +152,8 @@ static void check_for_required_args(mportPackageMeta *pack)
 
 static void usage() 
 {
-  fprintf(stderr, "\nmport.create <options>\n");
-  fprintf(stderr, "Options:\n");
+  fprintf(stderr, "\nmport.create <arguments>\n");
+  fprintf(stderr, "Arguments:\n");
   fprintf(stderr, "\t-n <package name>\n");
   fprintf(stderr, "\t-v <package version>\n");
   fprintf(stderr, "\t-o <package filename>\n");
@@ -174,3 +172,4 @@ static void usage()
   fprintf(stderr, "\t-M <mtree file>\n");  
   exit(1);
 }
+
