@@ -104,8 +104,7 @@ int main(int argc, char *argv[])
 
 static void usage() 
 {
-  fprintf(stderr, "Usage: mport.delete [-f] -n pkgname\n");
-  fprintf(stderr, "Usage: mport.delete [-f] -o origin\n");
+  fprintf(stderr, "Usage: mport.query [-q] <query statement>\n");
   exit(2);
 }
 
