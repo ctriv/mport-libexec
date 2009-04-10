@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
     exit(1);
   }
 
-  if (mport_get_meta_from_master(mport, &packs, where, arg) != MPORT_OK) {
+  if (mport_pkgmeta_search_master(mport, &packs, where, arg) != MPORT_OK) {
     warnx("%s", mport_err_string());
     exit(1);
   }

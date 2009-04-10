@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 {
   int ch;
   int plist_seen = 0;
-  mportPackageMeta *pack = mport_packagemeta_new();
+  mportPackageMeta *pack = mport_pkgmeta_new();
   mportAssetList *assetlist      = mport_assetlist_new();
   FILE *fp;
     
