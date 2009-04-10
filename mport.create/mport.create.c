@@ -110,6 +110,9 @@ int main(int argc, char *argv[])
       case 'm':
         pack->pkgmessage = optarg;
         break;
+      case 't':
+        mport_parselist(optarg, &(pack->categories));
+        break;
       case '?':
       default:
         usage();
@@ -147,6 +150,7 @@ static void check_for_required_args(mportPackageMeta *pack)
   CHECK_ARG(sourcedir, "source dir");
   CHECK_ARG(prefix, "prefix");
   CHECK_ARG(origin, "origin");
+  CHECK_ARG(categories, "categories");
 }
     
 
@@ -170,6 +174,7 @@ static void usage()
   fprintf(stderr, "\t-j <pkg-deinstall script>\n");
   fprintf(stderr, "\t-m <pkg-message file>\n");
   fprintf(stderr, "\t-M <mtree file>\n");  
+  fprintf(stderr, "\t-t <categories>\n");
   exit(1);
 }
 
