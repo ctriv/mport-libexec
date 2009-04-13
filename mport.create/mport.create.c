@@ -41,20 +41,21 @@ __MBSDID("$MidnightBSD: src/libexec/mport.create/mport.create.c,v 1.4 2008/01/05
 
 
 static void usage(void);
-static void check_for_required_args(mportPackageMeta *);
+static void check_for_required_args(mportPackageMeta *, mportCreateExtras *);
 
 int main(int argc, char *argv[]) 
 {
   int ch;
   int plist_seen = 0;
-  mportPackageMeta *pack = mport_pkgmeta_new();
-  mportAssetList *assetlist      = mport_assetlist_new();
+  mportPackageMeta *pack    = mport_pkgmeta_new();
+  mportCreateExtras *extra  = mport_createextras_new();
+  mportAssetList *assetlist = mport_assetlist_new();
   FILE *fp;
     
-  while ((ch = getopt(argc, argv, "o:n:v:c:l:s:d:p:P:D:M:O:C:i:j:m:r:")) != -1) {
+  while ((ch = getopt(argc, argv, "o:n:v:c:l:s:d:p:P:D:M:O:C:i:j:m:r:t:")) != -1) {
     switch (ch) {
       case 'o':
-        pack->pkg_filename = optarg;
+        extra->pkg_filename = optarg;
         break;
       case 'n':
         pack->name = optarg;
@@ -69,7 +70,7 @@ int main(int argc, char *argv[])
         pack->lang = optarg;
         break;
       case 's':
-        pack->sourcedir = optarg;
+        extra->sourcedir = optarg;
         break;
       case 'd':
         pack->desc = optarg;
@@ -90,25 +91,25 @@ int main(int argc, char *argv[])
         pack->prefix = optarg;
         break;
       case 'D':
-        mport_parselist(optarg, &(pack->depends));
+        mport_parselist(optarg, &(extra->depends));
         break;
       case 'M':
-        pack->mtree = optarg;
+        extra->mtree = optarg;
         break;
       case 'O':
         pack->origin = optarg;
         break;
       case 'C':
-        mport_parselist(optarg, &(pack->conflicts));
+        mport_parselist(optarg, &(extra->conflicts));
         break;
       case 'i':
-        pack->pkginstall = optarg;
+        extra->pkginstall = optarg;
         break;
       case 'j':
-        pack->pkgdeinstall = optarg;
+        extra->pkgdeinstall = optarg;
         break;
       case 'm':
-        pack->pkgmessage = optarg;
+        extra->pkgmessage = optarg;
         break;
       case 't':
         mport_parselist(optarg, &(pack->categories));
@@ -120,14 +121,14 @@ int main(int argc, char *argv[])
     }
   } 
 
-  check_for_required_args(pack);  
+  check_for_required_args(pack, extra);  
   
   if (plist_seen == 0) {
     warnx("Required arg missing: plist");
     usage();
   }
 
-  if (mport_create_primative(assetlist, pack) != MPORT_OK) {
+  if (mport_create_primative(assetlist, pack, extra) != MPORT_OK) {
     warnx("%s", mport_err_string());
     return 1;
   }
@@ -136,21 +137,21 @@ int main(int argc, char *argv[])
 }
 
 
-#define CHECK_ARG(field, errmsg) \
-  if (pack->field == NULL) { \
+#define CHECK_ARG(exp, errmsg) \
+  if (exp == NULL) { \
     warnx("Required arg missing: %s", #errmsg); \
     usage(); \
   }
   
-static void check_for_required_args(mportPackageMeta *pack)
+static void check_for_required_args(mportPackageMeta *pkg, mportCreateExtras *extra)
 {
-  CHECK_ARG(name, "package name")
-  CHECK_ARG(version, "package version");
-  CHECK_ARG(pkg_filename, "package filename");
-  CHECK_ARG(sourcedir, "source dir");
-  CHECK_ARG(prefix, "prefix");
-  CHECK_ARG(origin, "origin");
-  CHECK_ARG(categories, "categories");
+  CHECK_ARG(pkg->name, "package name")
+  CHECK_ARG(pkg->version, "package version");
+  CHECK_ARG(extra->pkg_filename, "package filename");
+  CHECK_ARG(extra->sourcedir, "source dir");
+  CHECK_ARG(pkg->prefix, "prefix");
+  CHECK_ARG(pkg->origin, "origin");
+  CHECK_ARG(pkg->categories, "categories");
 }
     
 
