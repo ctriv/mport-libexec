@@ -52,6 +52,7 @@ __MBSDID("$MidnightBSD: src/libexec/mport.check-fake/mport.check-fake.c,v 1.1 20
 static void usage(void);
 static int check_fake(mportAssetList *, const char *, const char *, const char *);
 static int grep_file(const char *, const char *);
+static char * escape_destdir(const char *);
 
 
 int main(int argc, char *argv[]) 
@@ -215,8 +216,16 @@ static int grep_file(const char *filename, const char *destdir)
   
   /* Should we cache the compiled regex? */
   if (!compiled) {
-    if (regcomp(&regex, destdir, REG_EXTENDED|REG_NOSUB) != 0)
+    
+    char *esc_destdir = escape_destdir(destdir);
+    
+    if (esc_destdir == NULL) 
+      errx(EX_DATAERR, "Couldn't escape destdir");
+    
+    if (regcomp(&regex, esc_destdir, REG_EXTENDED|REG_NOSUB) != 0)
       errx(EX_DATAERR, "Could not compile destdir regex");
+      
+    free(esc_destdir);
     compiled++;
   }
   
@@ -257,4 +266,28 @@ static void usage()
   exit(EX_USAGE);
 }
 
+/* escape regex characters that might be in the destdir path */
+static char * escape_destdir(const char *destdir) 
+{
+  char *esc = (char *)malloc(strlen(destdir) * 2 + 1);
+  char c;
+  int i = 0;
+  
+  if (esc == NULL)
+    err(EX_OSERR, "Couldn't alloc mem for escaped destdir");
+    
+  for (c = *destdir; c != 0; c = *(++destdir)) {
+    if (c == '+' || c == '*' || c == '\\' || c == '.') {
+      esc[i] = '\\';
+      i++;
+    }
+    
+    esc[i] = c;
+    i++;
+  }
+  
+  esc[i] = 0;
+  
+  return esc;
+}
 
